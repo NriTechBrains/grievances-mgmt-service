@@ -1,0 +1,9 @@
+spring:
+  application:
+    name: grievances-mgmt-service
+  data:
+    mongodb:
+      uri: mongodb+srv://grv_user:DHSZiEAsXUfyQ5AH@cluster0.efk7nvy.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
+      database: grievance
+      repositories:
+        enabled: true
