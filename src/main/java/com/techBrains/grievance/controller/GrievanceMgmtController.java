@@ -20,17 +20,18 @@ public class GrievanceMgmtController {
     @Autowired
     GrievanceMgmtService service;
 
-    @GetMapping("/hello")
+    @GetMapping(value = "/hello")
     public ResponseEntity<String> helloWorld() {
         return ResponseEntity.status(HttpStatus.OK).body("Welcome to new World!!!!");
     }
-    @GetMapping("/grievances")
+    @GetMapping(value = "/grievances", produces = {"application/json"})
     public ResponseEntity<List<GrievanceInfoResponseDto>> getAllGrievances() {
         List<GrievanceInfoResponseDto> list = service.getAllGrievances();
         return ResponseEntity.status(HttpStatus.OK).body(list);
     }
 
-    @PostMapping("/create")
+    @PostMapping(value = "/create",
+            consumes = {"application/json"}, produces = {"application/json"})
     public ResponseEntity<GrievanceInfoResponseDto> createGrievance(@RequestBody GrievanceInfoRequestDto requestDto) {
 
         GrievanceInfoResponseDto responseDto = service.createGrievance(requestDto);
@@ -40,7 +41,7 @@ public class GrievanceMgmtController {
     }
 
 
-    @GetMapping("/departments")
+    @GetMapping(value = "/departments", produces = {"application/json"})
     public ResponseEntity<List<DepartmentResponseDto>> getDepartments() {
 
         List<DepartmentResponseDto> departmentResponseDtos = service.getDepartments();
@@ -48,7 +49,7 @@ public class GrievanceMgmtController {
         return ResponseEntity.status(HttpStatus.OK).body(departmentResponseDtos);
     }
 
-    @GetMapping("/detailsByPhone/{phone}")
+    @GetMapping(value = "/detailsByPhone/{phone}", produces = {"application/json"})
     public ResponseEntity<PersonResponseDto> getPersonDetailsByPhone(@PathVariable String phone) {
 
         Optional<PersonResponseDto> personResponseDto = service.getPersonDetails(phone);

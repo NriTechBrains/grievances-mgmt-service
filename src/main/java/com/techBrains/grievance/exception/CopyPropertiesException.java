@@ -1,9 +1,9 @@
 package com.techBrains.grievance.exception;
 
-public class ResourceNotFoundException extends RuntimeException {
+public class CopyPropertiesException extends RuntimeException {
     private static final long serialVersionUID = 1L;
 
-    public ResourceNotFoundException(String msg) {
+    public CopyPropertiesException(String msg) {
         super(msg);
     }
 }

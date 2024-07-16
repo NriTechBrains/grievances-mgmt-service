@@ -11,6 +11,8 @@ import com.techBrains.grievance.repository.document.GrievanceInfoDocument;
 import com.techBrains.grievance.repository.document.DepartmentDocument;
 import com.techBrains.grievance.repository.document.PersonDetailsDocument;
 import com.techBrains.grievance.exception.ResourceNotFoundException;
+import com.techBrains.grievance.util.GrievanceUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.beanutils.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,6 +25,7 @@ import java.util.Optional;
 import static com.techBrains.grievance.util.GrievanceUtil.generateGrievanceId;
 
 @Service
+@Slf4j
 public class GrievanceMgmtService {
 
     @Autowired
@@ -42,14 +45,8 @@ public class GrievanceMgmtService {
 
         grievanceInfoDocuments.forEach(grievanceInfoDocument -> {
             GrievanceInfoResponseDto grievanceInfoDto = new GrievanceInfoResponseDto();
-
-            try {
-                BeanUtils.copyProperties(grievanceInfoDto, grievanceInfoDocument);
-            } catch (IllegalAccessException | InvocationTargetException e) {
-                throw new RuntimeException(e);
-            }
+            GrievanceUtil.copyProperties(grievanceInfoDto, grievanceInfoDocument);
             dtoList.add(grievanceInfoDto);
-
         });
 
         return dtoList;
@@ -59,24 +56,17 @@ public class GrievanceMgmtService {
     public GrievanceInfoResponseDto createGrievance(GrievanceInfoRequestDto requestDto) {
 
         GrievanceInfoDocument grievanceInfoDocument = new GrievanceInfoDocument();
-        try {
-            BeanUtils.copyProperties(grievanceInfoDocument, requestDto);
-            grievanceInfoDocument.setGrievanceId(generateGrievanceId(requestDto.getAssemblyNumber(),
-                    requestDto.getDepartmentCode()));
-        } catch (IllegalAccessException | InvocationTargetException e) {
-            throw new RuntimeException(e);
-        }
+
+        GrievanceUtil.copyProperties(grievanceInfoDocument, requestDto);
+        grievanceInfoDocument.setGrievanceId(generateGrievanceId(requestDto.getAssemblyNumber(),
+                requestDto.getDepartmentCode()));
 
         GrievanceInfoResponseDto responseDto = new GrievanceInfoResponseDto();
 
         grievanceInfoDocument = repository.save(grievanceInfoDocument);
         System.out.println(grievanceInfoDocument);
 
-        try {
-            BeanUtils.copyProperties(responseDto, grievanceInfoDocument);
-        } catch (InvocationTargetException | IllegalAccessException e) {
-            throw new RuntimeException(e);
-        }
+        GrievanceUtil.copyProperties(responseDto, grievanceInfoDocument);
 
         System.out.println(responseDto);
         return responseDto;
@@ -90,12 +80,7 @@ public class GrievanceMgmtService {
 
         departmentDocuments.forEach(departmentDocument -> {
             DepartmentResponseDto departmentResponseDto = new DepartmentResponseDto();
-
-            try {
-                BeanUtils.copyProperties(departmentResponseDto, departmentDocument);
-            } catch (IllegalAccessException | InvocationTargetException e) {
-                throw new RuntimeException(e);
-            }
+            GrievanceUtil.copyProperties(departmentResponseDto, departmentDocument);
             departmentResponseDtos.add(departmentResponseDto);
 
         });
@@ -108,13 +93,11 @@ public class GrievanceMgmtService {
         PersonResponseDto personResponseDto = new PersonResponseDto();
 
         if(personDetailsDocumentOpt.isPresent()) {
-            try {
-                BeanUtils.copyProperties(personResponseDto, personDetailsDocumentOpt.get());
-                return Optional.of(personResponseDto);
-            } catch (IllegalAccessException | InvocationTargetException e) {
-                throw new RuntimeException(e);
-            }
-        }else {
+            log.info("Person Details Found in DB by phone : {}",phone);
+            GrievanceUtil.copyProperties(personResponseDto, personDetailsDocumentOpt.get());
+            return Optional.of(personResponseDto);
+        } else {
+            log.info("Person Details Not Found in DB by phone : {}",phone);
             throw new ResourceNotFoundException("Person Details Not Found");
         }
     }
