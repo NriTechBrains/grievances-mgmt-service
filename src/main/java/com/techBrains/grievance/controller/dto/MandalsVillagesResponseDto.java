@@ -14,6 +14,6 @@ import java.util.Set;
 public class MandalsVillagesResponseDto {
 
     private Set<String> mandals;
-    private Map<String, List<String>> villages;
+    private Map<String, Set<String>> villages;
 
 }

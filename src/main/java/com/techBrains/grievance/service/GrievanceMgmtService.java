@@ -15,10 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.techBrains.grievance.util.GrievanceUtil.generateGrievanceId;
@@ -109,10 +106,10 @@ public class GrievanceMgmtService {
 
         List<MandalsVillagesDocument> documents = mandalsVillagesRepository.findAll();
 
-        Map<String, List<String>> map =
+        Map<String, Set<String>> map =
                 documents.stream().collect(groupingBy(MandalsVillagesDocument :: getMandal,
                         Collectors.mapping(MandalsVillagesDocument::getVillage,
-                        Collectors.toList())));
+                        Collectors.toSet())));
 
         MandalsVillagesResponseDto responseDto = new MandalsVillagesResponseDto();
         responseDto.setMandals(map.keySet());
