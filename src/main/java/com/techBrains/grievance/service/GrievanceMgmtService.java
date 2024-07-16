@@ -1,28 +1,28 @@
 package com.techBrains.grievance.service;
 
-import com.techBrains.grievance.controller.dto.GrievanceInfoRequestDto;
-import com.techBrains.grievance.controller.dto.GrievanceInfoResponseDto;
-import com.techBrains.grievance.controller.dto.DepartmentResponseDto;
-import com.techBrains.grievance.controller.dto.PersonResponseDto;
+import com.techBrains.grievance.controller.dto.*;
 import com.techBrains.grievance.repository.GrievanceMgmtRepository;
 import com.techBrains.grievance.repository.DepartmentRepository;
+import com.techBrains.grievance.repository.MandalsVillagesRepository;
 import com.techBrains.grievance.repository.PersonRepository;
 import com.techBrains.grievance.repository.document.GrievanceInfoDocument;
 import com.techBrains.grievance.repository.document.DepartmentDocument;
+import com.techBrains.grievance.repository.document.MandalsVillagesDocument;
 import com.techBrains.grievance.repository.document.PersonDetailsDocument;
 import com.techBrains.grievance.exception.ResourceNotFoundException;
 import com.techBrains.grievance.util.GrievanceUtil;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.beanutils.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static com.techBrains.grievance.util.GrievanceUtil.generateGrievanceId;
+import static java.util.stream.Collectors.groupingBy;
 
 @Service
 @Slf4j
@@ -36,6 +36,9 @@ public class GrievanceMgmtService {
 
     @Autowired
     PersonRepository personRepository;
+
+    @Autowired
+    MandalsVillagesRepository mandalsVillagesRepository;
 
     public List<GrievanceInfoResponseDto> getAllGrievances() {
 
@@ -100,5 +103,21 @@ public class GrievanceMgmtService {
             log.info("Person Details Not Found in DB by phone : {}",phone);
             throw new ResourceNotFoundException("Person Details Not Found");
         }
+    }
+
+    public MandalsVillagesResponseDto getMandalsAndVillages() {
+
+        List<MandalsVillagesDocument> documents = mandalsVillagesRepository.findAll();
+
+        Map<String, List<String>> map =
+                documents.stream().collect(groupingBy(MandalsVillagesDocument :: getMandal,
+                        Collectors.mapping(MandalsVillagesDocument::getVillage,
+                        Collectors.toList())));
+
+        MandalsVillagesResponseDto responseDto = new MandalsVillagesResponseDto();
+        responseDto.setMandals(map.keySet());
+        responseDto.setVillages(map);
+
+        return responseDto;
     }
 }

@@ -1,9 +1,6 @@
 package com.techBrains.grievance.controller;
 
-import com.techBrains.grievance.controller.dto.GrievanceInfoRequestDto;
-import com.techBrains.grievance.controller.dto.GrievanceInfoResponseDto;
-import com.techBrains.grievance.controller.dto.DepartmentResponseDto;
-import com.techBrains.grievance.controller.dto.PersonResponseDto;
+import com.techBrains.grievance.controller.dto.*;
 import com.techBrains.grievance.service.GrievanceMgmtService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -56,6 +53,15 @@ public class GrievanceMgmtController {
 
         return personResponseDto.map(responseDto -> ResponseEntity.status(HttpStatus.OK).body(responseDto))
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).body(null));
+
+    }
+
+    @GetMapping(value = "/mandalsAndVillages", produces = {"application/json"})
+    public ResponseEntity<MandalsVillagesResponseDto> getMandalsAndVillages() {
+
+        MandalsVillagesResponseDto responseDto = service.getMandalsAndVillages();
+
+        return ResponseEntity.status(HttpStatus.OK).body(responseDto);
 
     }
 }
