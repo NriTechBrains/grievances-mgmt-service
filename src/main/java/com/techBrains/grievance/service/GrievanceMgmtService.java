@@ -1,15 +1,10 @@
 package com.techBrains.grievance.service;
 
 import com.techBrains.grievance.controller.dto.*;
-import com.techBrains.grievance.repository.GrievanceMgmtRepository;
-import com.techBrains.grievance.repository.DepartmentRepository;
-import com.techBrains.grievance.repository.MandalsVillagesRepository;
-import com.techBrains.grievance.repository.PersonRepository;
-import com.techBrains.grievance.repository.document.GrievanceInfoDocument;
-import com.techBrains.grievance.repository.document.DepartmentDocument;
-import com.techBrains.grievance.repository.document.MandalsVillagesDocument;
-import com.techBrains.grievance.repository.document.PersonDetailsDocument;
+import com.techBrains.grievance.repository.*;
+import com.techBrains.grievance.repository.document.*;
 import com.techBrains.grievance.exception.ResourceNotFoundException;
+import com.techBrains.grievance.service.data.MessageData;
 import com.techBrains.grievance.util.GrievanceUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +32,12 @@ public class GrievanceMgmtService {
     @Autowired
     MandalsVillagesRepository mandalsVillagesRepository;
 
+    @Autowired
+    MessageSenderService messageSenderService;
+
+    @Autowired
+    VillageDeptContactDetailsRepository villageDeptContactDetailsRepository;
+
     public List<GrievanceInfoResponseDto> getAllGrievances() {
 
         List<GrievanceInfoResponseDto> dtoList = new ArrayList<>();
@@ -52,7 +53,7 @@ public class GrievanceMgmtService {
         return dtoList;
     }
 
-    //Need to create persons document
+    //TODO: identify this is new person, if it is then create into personDetails document
     public GrievanceInfoResponseDto createGrievance(GrievanceInfoRequestDto requestDto) {
 
         GrievanceInfoDocument grievanceInfoDocument = new GrievanceInfoDocument();
@@ -64,11 +65,27 @@ public class GrievanceMgmtService {
         GrievanceInfoResponseDto responseDto = new GrievanceInfoResponseDto();
 
         grievanceInfoDocument = repository.save(grievanceInfoDocument);
-        System.out.println(grievanceInfoDocument);
+
+        MessageData messageData = MessageData.builder()
+                .message(requestDto.getGrievanceDesc())
+                .phone(requestDto.getPhoneNumber())
+                .targetLanguage("te")
+                .sourceLanguage("en")
+                .build();
+
+        messageSenderService.sendMessage(messageData);
 
         GrievanceUtil.copyProperties(responseDto, grievanceInfoDocument);
 
-        System.out.println(responseDto);
+        if(requestDto.isNewPerson()) {
+            personRepository.save(PersonDetailsDocument.builder()
+                    .phone(requestDto.getPhoneNumber())
+                    .personName(requestDto.getName())
+                    .village(requestDto.getVillageOrTown())
+                    .mandal(requestDto.getMandal())
+                    .build());
+        }
+
         return responseDto;
 
     }
@@ -116,5 +133,26 @@ public class GrievanceMgmtService {
         responseDto.setVillages(map);
 
         return responseDto;
+    }
+
+    public List<VillageDeptContactDetailsResponseDto> getDepartmentContactDetails(String departmentId,
+                                                                  String mandal, String village) {
+
+        List<VillageDeptContactDetailsResponseDto> responseDtos = new ArrayList<>();
+
+        List<VillageDeptContactDetailsDocument> list
+                = villageDeptContactDetailsRepository.findByDepartmentIdAndMandalAndVillage(departmentId,
+                mandal, village);
+
+        log.info(""+list.size());
+        log.info ("{} -{}-{}", departmentId, mandal, village);
+
+        list.forEach(villageDeptContactDetailsDocument -> {
+            VillageDeptContactDetailsResponseDto dto = new VillageDeptContactDetailsResponseDto();
+            GrievanceUtil.copyProperties(dto, villageDeptContactDetailsDocument);
+            responseDtos.add(dto);
+        });
+
+        return responseDtos;
     }
 }

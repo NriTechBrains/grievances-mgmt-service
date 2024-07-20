@@ -18,10 +18,13 @@ public class GrievanceInfoRequestDto {
     private String villageOrTown;
     private String mandal;
     private String grievanceDesc;
-    private String departmentName;
+   /* private String departmentName;
+    private String sla;*/
+
     private String departmentCode;
-    private String sla;
-    private String assignedTo;
+    private String departmentId;
+    private String departmentPerson;
+    private String departmentContact;
 
     //@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy hh:mm:ss")
     private String dueDate;
@@ -31,4 +34,5 @@ public class GrievanceInfoRequestDto {
     private String phoneNumber;
     private boolean assignToMe;
     private String loginUserId;
+    private boolean newPerson;
 }

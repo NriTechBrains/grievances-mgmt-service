@@ -20,14 +20,17 @@ public class GrievanceInfoResponseDto {
     private String villageOrTown;
     private String mandal;
     private String grievanceDesc;
-    private String departmentName;
+    /*private String departmentName;
+    private String sla;*/
     private String departmentCode;
-    private String sla;
-    private String assignedTo;
+    private String departmentId;
+    private String departmentPerson;
+    private String departmentContact;
     private String dueDate;
     private String assemblyName;
     private int assemblyNumber;
     private String phoneNumber;
     private boolean assignToMe;
     private String loginUserId;
+    private boolean newPerson;
 }

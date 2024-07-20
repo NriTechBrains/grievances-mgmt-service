@@ -27,21 +27,21 @@ public class GrievanceInfoDocument {
     private String villageOrTown;
     private String mandal;
     private String grievanceDesc;
-    private String department;
     private String assemblyName;
     private int assemblyNumber;
     private String phoneNumber;
     private String personStatus; //need to change this
     private String departmentStatus;
-    private String assigneeName;
-    private String assigneePhone;
+    private String departmentPerson;
+    private String departmentContact;
     private String dueDate;
-    private String departmentName;
+   /* private String departmentName;
+    private String sla;*/
     private String departmentCode;
-    private String sla;
-    private String assignedTo;
+    private String departmentId;
     private boolean assignToMe;
     private String loginUserId;
+    private boolean newPerson;
     @CreatedDate
     private Instant createdDateTime;
     @LastModifiedDate

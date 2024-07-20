@@ -64,4 +64,18 @@ public class GrievanceMgmtController {
         return ResponseEntity.status(HttpStatus.OK).body(responseDto);
 
     }
+
+    @GetMapping(value = "/details/deptId/{deptId}/mandal/{mandal}/village/{village}",
+            produces = {"application/json"})
+    public ResponseEntity<List<VillageDeptContactDetailsResponseDto>> getDepartmentContactDetails(@PathVariable String deptId,
+                                                                                  @PathVariable String mandal,
+                                                                                  @PathVariable String village) {
+
+        List<VillageDeptContactDetailsResponseDto> responseDto = service.getDepartmentContactDetails(deptId, mandal, village);
+
+        return ResponseEntity.status(HttpStatus.OK).body(responseDto);
+
+    }
+
+
 }
