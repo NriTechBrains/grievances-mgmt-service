@@ -47,12 +47,11 @@ public class GrievanceMgmtController {
     }
 
     @GetMapping(value = "/detailsByPhone/{phone}", produces = {"application/json"})
-    public ResponseEntity<PersonResponseDto> getPersonDetailsByPhone(@PathVariable String phone) {
+    public ResponseEntity<List<PersonResponseDto>> getPersonDetailsByPhone(@PathVariable String phone) {
 
-        Optional<PersonResponseDto> personResponseDto = service.getPersonDetails(phone);
+        List<PersonResponseDto> personResponseDto = service.getPersonDetails(phone);
 
-        return personResponseDto.map(responseDto -> ResponseEntity.status(HttpStatus.OK).body(responseDto))
-                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).body(null));
+        return ResponseEntity.status(HttpStatus.OK).body(personResponseDto);
 
     }
 

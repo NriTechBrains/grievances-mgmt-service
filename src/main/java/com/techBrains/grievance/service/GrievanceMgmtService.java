@@ -104,18 +104,23 @@ public class GrievanceMgmtService {
         return departmentResponseDtos;
     }
 
-    public Optional<PersonResponseDto> getPersonDetails(String phone) {
+    public List<PersonResponseDto> getPersonDetails(String phone) {
 
-        Optional<PersonDetailsDocument> personDetailsDocumentOpt = personRepository.findByPhone(phone);
-        PersonResponseDto personResponseDto = new PersonResponseDto();
+        List<PersonDetailsDocument> personDetailsDocumentList = personRepository.findByPhone(phone);
+        List<PersonResponseDto> dtoList = new ArrayList<>();
 
-        if(personDetailsDocumentOpt.isPresent()) {
-            log.info("Person Details Found in DB by phone : {}",phone);
-            GrievanceUtil.copyProperties(personResponseDto, personDetailsDocumentOpt.get());
-            return Optional.of(personResponseDto);
-        } else {
+        if(personDetailsDocumentList.isEmpty()) {
             log.info("Person Details Not Found in DB by phone : {}",phone);
             throw new ResourceNotFoundException("Person Details Not Found");
+        } else {
+            log.info("Person Details Found in DB by phone : {}",phone);
+            personDetailsDocumentList.forEach(personDetailsDocument -> {
+                PersonResponseDto personResponseDto = new PersonResponseDto();
+                GrievanceUtil.copyProperties(personResponseDto, personDetailsDocument);
+                dtoList.add(personResponseDto);
+            });
+
+            return dtoList;
         }
     }
 
