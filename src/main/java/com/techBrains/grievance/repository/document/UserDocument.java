@@ -22,5 +22,6 @@ public class UserDocument {
     private String assemblyName;
     private int assemblyNumber;
     private String phone;
+    private String email;
 
 }

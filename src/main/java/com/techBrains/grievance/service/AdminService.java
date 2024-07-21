@@ -24,14 +24,14 @@ public class AdminService {
     public LoginResponseDto loginUser(LoginRequestDto requestDto) {
 
         Optional<UserDocument> optionalUserDocument =
-                userRepository.findByLoginIdAndPassword(requestDto.getLoginId(), requestDto.getPassword());
+                userRepository.findByEmailAndPassword(requestDto.getEmail(), requestDto.getPassword());
         LoginResponseDto responseDto = new LoginResponseDto();
 
         if (optionalUserDocument.isPresent()) {
-            log.info("User Document found in DB for loginId : {}", requestDto.getLoginId());
+            log.info("User Document found in DB for loginId : {}", requestDto.getEmail());
             GrievanceUtil.copyProperties(responseDto, optionalUserDocument.get());
         } else {
-            log.info("User Document not found in DB for loginId : {}", requestDto.getLoginId());
+            log.info("User Document not found in DB for loginId : {}", requestDto.getEmail());
             throw new ResourceNotFoundException("Invalid User Name Or Password");
         }
         return responseDto;

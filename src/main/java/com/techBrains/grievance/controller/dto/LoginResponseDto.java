@@ -16,4 +16,5 @@ public class LoginResponseDto {
     private String assemblyName;
     private String assemblyNumber;
     private String phone;
+    private String email;
 }
