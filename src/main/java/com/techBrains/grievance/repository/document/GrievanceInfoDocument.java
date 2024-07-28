@@ -30,7 +30,7 @@ public class GrievanceInfoDocument {
     private String assemblyName;
     private int assemblyNumber;
     private String phoneNumber;
-    private String personStatus; //need to change this
+    private String status;
     private String departmentStatus;
     private String departmentPerson;
     private String departmentContact;

@@ -61,6 +61,7 @@ public class GrievanceMgmtService {
         GrievanceUtil.copyProperties(grievanceInfoDocument, requestDto);
         grievanceInfoDocument.setGrievanceId(generateGrievanceId(requestDto.getAssemblyNumber(),
                 requestDto.getDepartmentCode()));
+        grievanceInfoDocument.setStatus(GrievancesStatusEnum.CREATE.name());
 
         GrievanceInfoResponseDto responseDto = new GrievanceInfoResponseDto();
 
@@ -159,5 +160,19 @@ public class GrievanceMgmtService {
         });
 
         return responseDtos;
+    }
+
+    public GrievanceInfoResponseDto getGrievanceDetails(String grievanceId) {
+
+        Optional<GrievanceInfoDocument> grievanceInfoDocumentOpt = repository.findByGrievanceId(grievanceId);
+
+        GrievanceInfoResponseDto responseDto = new GrievanceInfoResponseDto();
+
+        if(grievanceInfoDocumentOpt.isPresent()) {
+            GrievanceUtil.copyProperties(responseDto, grievanceInfoDocumentOpt.get());
+            return responseDto;
+        } else {
+            throw new ResourceNotFoundException("Grievance details not found!!!");
+        }
     }
 }

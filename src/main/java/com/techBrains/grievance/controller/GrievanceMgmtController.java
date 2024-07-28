@@ -76,5 +76,11 @@ public class GrievanceMgmtController {
 
     }
 
+    @GetMapping(value = "/info/{grievanceId}", produces = {"application/json"})
+    public ResponseEntity<GrievanceInfoResponseDto> getGrievanceDetails(@PathVariable String grievanceId) {
+        GrievanceInfoResponseDto responseDto = service.getGrievanceDetails(grievanceId);
+        return ResponseEntity.status(HttpStatus.OK).body(responseDto);
+    }
+
 
 }
