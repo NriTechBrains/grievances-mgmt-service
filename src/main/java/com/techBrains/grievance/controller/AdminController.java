@@ -24,7 +24,7 @@ public class AdminController {
             consumes = {"application/json"}, produces = {"application/json"})
     public ResponseEntity<LoginResponseDto> loginUser(@RequestBody LoginRequestDto requestDto) {
 
-        log.info("Login request for received {}", requestDto.getEmail());
+        log.info("Login request for received {}", requestDto.getLoginId());
 
         LoginResponseDto loginResponseDto = adminService.loginUser(requestDto);
 
