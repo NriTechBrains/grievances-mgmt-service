@@ -5,6 +5,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+import java.util.Map;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -17,19 +20,20 @@ public class GrievanceInfoResponseDto {
     private String villageOrTown;
     private String mandal;
     private String grievanceDesc;
-    /*private String departmentName;
-    private String sla;*/
+
     private String departmentCode;
     private String departmentId;
-    private String departmentPerson;
-    private String departmentContact;
+    //@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy hh:mm:ss")
     private String dueDate;
+
     private String assemblyName;
     private int assemblyNumber;
     private String phoneNumber;
     private boolean assignToMe;
     private String loginUserId;
     private boolean newPerson;
+    private Map<String, Object> departmentContactDetails;
+    private Map<String, Object> politicalContactDetails;
     private String status;
     private String departmentStatus;
 }
