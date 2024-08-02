@@ -5,7 +5,8 @@ import com.techBrains.grievance.repository.document.VillageDeptContactDetailsDoc
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface VillageDeptContactDetailsRepository extends MongoRepository<VillageDeptContactDetailsDocument, Integer> {
-    List<VillageDeptContactDetailsDocument> findByDepartmentIdAndMandalAndVillage(String departmentId, String mandal, String village);
+    Optional<VillageDeptContactDetailsDocument> findByDepartmentIdAndMandalAndVillage(String departmentId, String mandal, String village);
 }

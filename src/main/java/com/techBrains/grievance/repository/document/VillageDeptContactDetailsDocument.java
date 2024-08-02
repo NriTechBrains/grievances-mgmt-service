@@ -7,6 +7,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.List;
+import java.util.Map;
+
 @Document(value = "villageDeptContactDetails")
 @Data
 @AllArgsConstructor
@@ -17,6 +20,5 @@ public class VillageDeptContactDetailsDocument {
     private String departmentId;
     private String mandal;
     private String village;
-    private String personName;
-    private String phone;
+    private List<Map<String, Object>> contactDetails;
 }

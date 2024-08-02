@@ -38,6 +38,9 @@ public class GrievanceMgmtService {
     @Autowired
     VillageDeptContactDetailsRepository villageDeptContactDetailsRepository;
 
+    @Autowired
+    PeopleRepresentativeDetailsRepository peopleRepresentativeDetailsRepository;
+
     public List<GrievanceInfoResponseDto> getAllGrievances() {
 
         List<GrievanceInfoResponseDto> dtoList = new ArrayList<>();
@@ -141,25 +144,20 @@ public class GrievanceMgmtService {
         return responseDto;
     }
 
-    public List<VillageDeptContactDetailsResponseDto> getDepartmentContactDetails(String departmentId,
+    public VillageDeptContactDetailsResponseDto getDepartmentContactDetails(String departmentId,
                                                                   String mandal, String village) {
 
-        List<VillageDeptContactDetailsResponseDto> responseDtos = new ArrayList<>();
+        VillageDeptContactDetailsResponseDto responseDto = new VillageDeptContactDetailsResponseDto();
 
-        List<VillageDeptContactDetailsDocument> list
+        Optional<VillageDeptContactDetailsDocument> document
                 = villageDeptContactDetailsRepository.findByDepartmentIdAndMandalAndVillage(departmentId,
                 mandal, village);
 
-        log.info(""+list.size());
+        document.ifPresent(villageDeptContactDetailsDocument -> GrievanceUtil.copyProperties(responseDto, villageDeptContactDetailsDocument));
+
         log.info ("{} -{}-{}", departmentId, mandal, village);
 
-        list.forEach(villageDeptContactDetailsDocument -> {
-            VillageDeptContactDetailsResponseDto dto = new VillageDeptContactDetailsResponseDto();
-            GrievanceUtil.copyProperties(dto, villageDeptContactDetailsDocument);
-            responseDtos.add(dto);
-        });
-
-        return responseDtos;
+        return responseDto;
     }
 
     public GrievanceInfoResponseDto getGrievanceDetails(String grievanceId) {
@@ -174,5 +172,16 @@ public class GrievanceMgmtService {
         } else {
             throw new ResourceNotFoundException("Grievance details not found!!!");
         }
+    }
+
+    public PeopleRepresentativeDetailsDto getPoliticalContactDetails(String mandal, String village) {
+        PeopleRepresentativeDetailsDto dto = new PeopleRepresentativeDetailsDto();
+
+        Optional<PeopleRepresentativeDetailsDocument> document =
+                peopleRepresentativeDetailsRepository.findByMandalAndVillage(mandal, village);
+
+        document.ifPresent(peopleRepresentativeDetailsDocument -> GrievanceUtil.copyProperties(dto, peopleRepresentativeDetailsDocument));
+
+        return dto;
     }
 }

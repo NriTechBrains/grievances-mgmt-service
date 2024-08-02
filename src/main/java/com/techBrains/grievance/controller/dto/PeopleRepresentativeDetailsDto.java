@@ -1,5 +1,6 @@
 package com.techBrains.grievance.controller.dto;
 
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,9 +13,8 @@ import java.util.Map;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class VillageDeptContactDetailsResponseDto {
+public class PeopleRepresentativeDetailsDto {
 
-    private String departmentId;
     private String mandal;
     private String village;
     private List<Map<String, Object>> contactDetails;

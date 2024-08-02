@@ -64,13 +64,13 @@ public class GrievanceMgmtController {
 
     }
 
-    @GetMapping(value = "/details/deptId/{deptId}/mandal/{mandal}/village/{village}",
+    @GetMapping(value = "/deptDetails/deptId/{deptId}/mandal/{mandal}/village/{village}",
             produces = {"application/json"})
-    public ResponseEntity<List<VillageDeptContactDetailsResponseDto>> getDepartmentContactDetails(@PathVariable String deptId,
+    public ResponseEntity<VillageDeptContactDetailsResponseDto> getDepartmentContactDetails(@PathVariable String deptId,
                                                                                   @PathVariable String mandal,
                                                                                   @PathVariable String village) {
 
-        List<VillageDeptContactDetailsResponseDto> responseDto = service.getDepartmentContactDetails(deptId, mandal, village);
+       VillageDeptContactDetailsResponseDto responseDto = service.getDepartmentContactDetails(deptId, mandal, village);
 
         return ResponseEntity.status(HttpStatus.OK).body(responseDto);
 
@@ -80,6 +80,17 @@ public class GrievanceMgmtController {
     public ResponseEntity<GrievanceInfoResponseDto> getGrievanceDetails(@PathVariable String grievanceId) {
         GrievanceInfoResponseDto responseDto = service.getGrievanceDetails(grievanceId);
         return ResponseEntity.status(HttpStatus.OK).body(responseDto);
+    }
+
+
+    @GetMapping(value = "/peopleRepDetails/mandal/{mandal}/village/{village}", produces = {"application/json"})
+    public ResponseEntity<PeopleRepresentativeDetailsDto> getPoliticalContactDetails(@PathVariable String mandal,
+                                                                                     @PathVariable String village) {
+
+       PeopleRepresentativeDetailsDto responseDto = service.getPoliticalContactDetails(mandal, village);
+
+        return ResponseEntity.status(HttpStatus.OK).body(responseDto);
+
     }
 
 
