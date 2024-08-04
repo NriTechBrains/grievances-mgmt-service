@@ -7,6 +7,8 @@ import com.techBrains.grievance.exception.ResourceNotFoundException;
 import com.techBrains.grievance.service.data.MessageData;
 import com.techBrains.grievance.util.GrievanceUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -70,9 +72,21 @@ public class GrievanceMgmtService {
 
         grievanceInfoDocument = repository.save(grievanceInfoDocument);
 
+
+        Set<String> uniquePhoneNumbers = new HashSet<>();
+
+        JSONObject departmentContactDetails = new JSONObject(requestDto.getDepartmentContactDetails());
+        JSONArray userDetails = departmentContactDetails.getJSONArray("userDetails");
+
+        extractPhoneNumbersFromMap(userDetails.toList(), uniquePhoneNumbers);
+
+        JSONObject politicalContactDetails = new JSONObject(requestDto.getPoliticalContactDetails());
+        userDetails = politicalContactDetails.getJSONArray("userDetails");
+        extractPhoneNumbersFromMap(userDetails.toList(), uniquePhoneNumbers);
+
         MessageData messageData = MessageData.builder()
                 .message(requestDto.getGrievanceDesc())
-                .phone(requestDto.getPhoneNumber())
+                .phones(uniquePhoneNumbers)
                 .targetLanguage("te")
                 .sourceLanguage("en")
                 .build();
@@ -94,6 +108,22 @@ public class GrievanceMgmtService {
 
     }
 
+    private static void extractPhoneNumbersFromMap(List<Object> list, Set<String> phoneNumbers) {
+        for (Object obj : list) {
+            if (obj instanceof Map) {
+                Map<String, Object> map = (Map<String, Object>) obj;
+                if (map.containsKey("data")) {
+                    Map<String, Object> data = (Map<String, Object>) map.get("data");
+                    if (data.containsKey("phone")) {
+                        phoneNumbers.add(data.get("phone").toString());
+                    }
+                }
+                if (map.containsKey("children")) {
+                    extractPhoneNumbersFromMap((List<Object>) map.get("children"), phoneNumbers);
+                }
+            }
+        }
+    }
     public List<DepartmentResponseDto> getDepartments() {
         List<DepartmentDocument> departmentDocuments = departmentRepository.findAll();
 

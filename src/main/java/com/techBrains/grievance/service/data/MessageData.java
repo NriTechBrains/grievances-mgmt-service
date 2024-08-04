@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Set;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -13,7 +15,7 @@ import lombok.NoArgsConstructor;
 public class MessageData {
 
     private String message;
-    private String phone;
+    private Set<String> phones;
     private String sourceLanguage;
     private String targetLanguage;
 }

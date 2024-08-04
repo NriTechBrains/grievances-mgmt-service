@@ -38,18 +38,20 @@ public class WhatsAppMessageService implements MessageSenderService{
             // http://148.251.129.118/whatsapp/api/send?mobile=919652852530&msg=test
             // &apikey=a2080745146846ceba2870a02d9b2200
 
-            WhatsappResponse response = this.webClient.get().uri(uriBuilder ->
-                            uriBuilder
-                                    .queryParam("mobile", data.getPhone())
-                                    .queryParam("apikey", this.whatsappApiKey)
-                                    .queryParam("msg", translatedMessage)
-                                    .build())
-                    .retrieve()
-                    .bodyToMono(WhatsappResponse.class)
-                    .onErrorResume(e -> Mono.empty())
-                    .block();
-            log.info("Message Sent to {}", data.getPhone());
-            log.info("WhatsApp api response: {}", response);
+            data.getPhones().forEach(phoneNumber -> {
+                WhatsappResponse response = this.webClient.get().uri(uriBuilder ->
+                                uriBuilder
+                                        .queryParam("mobile", phoneNumber)
+                                        .queryParam("apikey", this.whatsappApiKey)
+                                        .queryParam("msg", translatedMessage)
+                                        .build())
+                        .retrieve()
+                        .bodyToMono(WhatsappResponse.class)
+                        .onErrorResume(e -> Mono.empty())
+                        .block();
+                log.info("Message Sent to {}", phoneNumber);
+                log.info("WhatsApp api response: {}", response);
+            });
         } catch (Exception e){
             throw new MessageSenderException(e.getMessage());
         }
